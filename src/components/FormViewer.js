@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useClipboard } from './App';
 
 function FormViewer() {
   const { id } = useParams();
   const [form, setForm] = useState(null);
   const [formData, setFormData] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const { copyToClipboard } = useClipboard();
 
   useEffect(() => {
     fetchForm();
@@ -52,6 +54,13 @@ function FormViewer() {
     }
   };
 
+  const copyResponse = () => {
+    const responseText = Object.entries(formData)
+      .map(([label, value]) => `${label}: ${value}`)
+      .join('\n');
+    copyToClipboard(responseText);
+  };
+
   if (!form) return <div>Loading...</div>;
 
   return (
@@ -62,6 +71,12 @@ function FormViewer() {
       {submitted ? (
         <div className="success-message">
           <h3>Thank you for your submission!</h3>
+          <button 
+            className="button"
+            onClick={copyResponse}
+          >
+            Copy Response
+          </button>
         </div>
       ) : (
         <form onSubmit={handleSubmit}>

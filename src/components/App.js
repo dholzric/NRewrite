@@ -1,10 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './Header';
 import FormList from './FormList';
 import FormDesigner from './FormDesigner';
 import FormViewer from './FormViewer';
+import Notes from './Notes';
 import '../styles/main.css';
+
+const ClipboardContext = createContext();
+
+export const useClipboard = () => useContext(ClipboardContext);
+
+const ClipboardProvider = ({ children }) => {
+  const [clipboard, setClipboard] = useState(null);
+
+  const copyToClipboard = (data) => {
+    setClipboard(data);
+  };
+
+  const pasteFromClipboard = () => {
+    return clipboard;
+  };
+
+  const clearClipboard = () => {
+    setClipboard(null);
+  };
+
+  return (
+    <ClipboardContext.Provider value={{ copyToClipboard, pasteFromClipboard, clearClipboard }}>
+      {children}
+    </ClipboardContext.Provider>
+  );
+};
 
 function App() {
   const [forms, setForms] = useState([]);
@@ -94,38 +121,43 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="App">
-        <Header />
-        <div className="container">
-          {error && <div className="error-message">{error}</div>}
-          {loading ? (
-            <div>Loading forms...</div>
-          ) : (
-            <Routes>
-              <Route path="/" element={
-                <FormList 
-                  forms={forms} 
-                  onFormDeleted={handleFormDeleted}
-                />
-              } />
-              <Route path="/design" element={
-                <FormDesigner 
-                  onFormCreated={handleFormCreated}
-                  onFormUpdated={handleFormUpdated}
-                />
-              } />
-              <Route path="/forms/:id" element={
-                <FormViewer 
-                  forms={forms}
-                  onFormUpdated={handleFormUpdated}
-                />
-              } />
-            </Routes>
-          )}
+    <ClipboardProvider>
+      <Router>
+        <div className="App">
+          <Header />
+          <div className="container">
+            {error && <div className="error-message">{error}</div>}
+            {loading ? (
+              <div>Loading forms...</div>
+            ) : (
+              <Routes>
+                <Route path="/" element={
+                  <FormList 
+                    forms={forms} 
+                    onFormDeleted={handleFormDeleted}
+                  />
+                } />
+                <Route path="/design" element={
+                  <FormDesigner 
+                    onFormCreated={handleFormCreated}
+                    onFormUpdated={handleFormUpdated}
+                  />
+                } />
+                <Route path="/forms/:id" element={
+                  <FormViewer 
+                    forms={forms}
+                    onFormUpdated={handleFormUpdated}
+                  />
+                } />
+                <Route path="/notes" element={
+                  <Notes />
+                } />
+              </Routes>
+            )}
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </ClipboardProvider>
   );
 }
 

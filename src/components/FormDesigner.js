@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useClipboard } from './App';
 
 function FormDesigner({ onFormCreated }) {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ function FormDesigner({ onFormCreated }) {
     required: false
   });
   const navigate = useNavigate();
+  const { copyToClipboard, pasteFromClipboard } = useClipboard();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,6 +48,21 @@ function FormDesigner({ onFormCreated }) {
     }
   };
 
+  const copyField = (index) => {
+    const fieldToCopy = formData.fields[index];
+    copyToClipboard(fieldToCopy);
+  };
+
+  const pasteField = () => {
+    const copiedField = pasteFromClipboard();
+    if (copiedField) {
+      setFormData(prev => ({
+        ...prev,
+        fields: [...prev.fields, copiedField]
+      }));
+    }
+  };
+
   return (
     <div className="form-designer">
       <h2>Create New Form</h2>
@@ -72,6 +89,13 @@ function FormDesigner({ onFormCreated }) {
         {formData.fields.map((field, index) => (
           <div key={index} className="field">
             <p>{field.label} ({field.type}) {field.required && '*'}</p>
+            <button 
+              type="button" 
+              className="button small"
+              onClick={() => copyField(index)}
+            >
+              Copy
+            </button>
           </div>
         ))}
 
@@ -111,6 +135,14 @@ function FormDesigner({ onFormCreated }) {
 
         <button type="button" className="button" onClick={addField}>
           Add Field
+        </button>
+
+        <button 
+          type="button" 
+          className="button"
+          onClick={pasteField}
+        >
+          Paste Field
         </button>
 
         <button type="submit" className="button">

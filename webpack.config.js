@@ -32,7 +32,7 @@ module.exports = {
     historyApiFallback: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:1352',
+        target: 'http://localhost:1353',
         secure: false
       }
     }

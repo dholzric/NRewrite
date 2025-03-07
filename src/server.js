@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 
 require('dotenv').config();
 const app = express();
-const port = process.env.PORT || 1352;
+const port = process.env.PORT || 1353;
 
 // Error handling middleware
 app.use((err, req, res, next) => {
