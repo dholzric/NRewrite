@@ -1,0 +1,18 @@
+modern-lotus-notes/
+│
+├── public/
+│   ├── index.html
+│   └── favicon.ico
+│
+├── src/
+│   ├── components/
+│   │   ├── FormDesigner.jsx          # Form designer component
+│   │   └── FormListDialog.jsx        # Form list dialog component
+│   │
+│   ├── ModernNotesApp.jsx            # Main application component
+│   ├── index.js                      # Application entry point
+│   └── index.css                     # Tailwind CSS imports
+│
+├── package.json
+├── tailwind.config.js
+└── README.md
