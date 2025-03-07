@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ModernNotesApp from './ModernNotesApp';
-import './index.css'; // Assume this includes Tailwind CSS
+import App from './src/components/App';
+import './css-file.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ModernNotesApp />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
